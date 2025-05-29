@@ -6,7 +6,7 @@ from pydantic import Field
 from datetime import datetime
 from . import utils
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger("mcp-weather")
 
 # Create an MCP server
