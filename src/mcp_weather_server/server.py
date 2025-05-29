@@ -1,10 +1,14 @@
+from argparse import ArgumentParser
+
 import httpx
 import logging
-from typing import Annotated
+from typing import Annotated, Literal
 from mcp.server.fastmcp import FastMCP
 from pydantic import Field
 from datetime import datetime
 from . import utils
+
+type Transport = Literal["stdio", "sse", "streamable-http"]
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger("mcp-weather")
@@ -137,8 +141,12 @@ async def get_current_datetime(timezone_name: Annotated[str, Field(description="
         datetime=current_time.isoformat(timespec="seconds"),
     )
 
-def main():
-    mcp.run()
+def main(transport: Transport = "stdio"):
+    mcp.run(transport=transport)
 
 if __name__ == "__main__":
-    main()
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument("--transport", choices=["stdio", "sse", "streamable-http"], default="stdio")
+    args = arg_parser.parse_args()
+
+    main(transport=args.transport)
